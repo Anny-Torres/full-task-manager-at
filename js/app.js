@@ -35,22 +35,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderTasks() {
         taskList.innerHTML = '';
-        tasks.forEach(task => {
+        tasks.forEach(
+            task => {
+                console.log(task);
 
-            const li = document.createElement('li');
-            li.classList.toggle('completar', task.complete);
-            li.innerHTML =
-                '<span>' + task.text + '</span>' +
-                '<div>' +
-                (task.complete ?
-                    '<button class="complete-btn" disabled>Modificada</button>' :
-                    '<button class="edit-btn" onclick="editTask(' + task.id + ')">Editar</button>' +
-                    '<button class="delete-btn" onclick="deleteTask(' + task.id + ')">Eliminar</button>' +
-                    '<button class="complete-btn" onclick="toggleComplete(' + task.id + ')">Marcar</button>'
-                ) +
-                '</div>';
-            taskList.appendChild(li);
-        });
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center bg-gray-100 px-15 py-15 rounded';
+                if (task.complete) {
+                    li.classList.add('completada');
+                }
+                li.innerHTML =
+                    '<span>' + task.text + '</span>' +
+                    '<div>' +
+                    (task.complete ?
+                        '<button class="complete-btn" disabled>Modificada</button>' :
+                        '<button class="edit-btn" onclick="editTask(' + task.id + ')">Editar</button>' +
+                        '<button class="delete-btn" onclick="deleteTask(' + task.id + ')">Eliminar</button>' +
+                        '<button class="complete-btn" onclick="toggleComplete(' + task.id + ')">Marcar Completa</button>'
+                    ) +
+                    '</div>';
+                taskList.appendChild(li);
+
+                const completeBtn = li.querySelector('.complete-btn');
+                completeBtn.addEventListener('click', () => {
+                    completeTask(task.id);
+                });
+            });
+    }
+
+    window.completeTask = function (id) {
+        tasks = tasks.map(task =>
+            task.id === id ? { ...task, complete: !task.complete } : task
+        );
+        renderTasks();
     }
 
     window.deleteTask = function (id) {
@@ -59,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.editTask = function (id) {
+        console.log(id);
         const et = tasks.find(t => t.id === id);
         if (et) {
             taskInput.value = et.text;
@@ -66,16 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isEditing = true;
             editingId = et.id;
         }
-    }
-
-    window.toggleComplete = function (id) {
-        tasks = tasks.map(task =>
-            task.id === id ? {
-                ...task,
-                complete: true
-            } : task
-        );
-        renderTasks();
     }
 
 });
