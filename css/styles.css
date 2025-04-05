@@ -48,3 +48,12 @@ li {
     border-color: white;
     color: #f9f9f9;
 }
+
+.complete-btn {
+    margin-left: 5px;
+    border-radius: 3px;
+    padding: 5px;
+    border-color: white;
+    background-color: green;
+    color: bisque;
+}
